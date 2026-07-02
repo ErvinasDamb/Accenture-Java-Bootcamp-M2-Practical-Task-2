@@ -1,6 +1,9 @@
 package org.example.config;
 
+import lombok.Getter;
+
 // Singleton configuration class
+@Getter
 public class AppConfig {
     private static AppConfig instance;
 
@@ -15,17 +18,9 @@ public class AppConfig {
     }
 
     public static AppConfig getInstance(){
-        // TODO
-        return null;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
-    }
-    public String getCurrency() {
-        return currency;
-    }
-    public double getTaxRate() {
-        return taxRate;
+        if (instance == null) {
+            instance = new AppConfig();
+        }
+        return instance;
     }
 }

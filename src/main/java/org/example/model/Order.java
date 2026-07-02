@@ -1,32 +1,49 @@
 package org.example.model;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Order {
     private final String customerName;
     private final List<OrderItem> items;
     private OrderStatus status;
     private Discount discount = new NoDiscount();
 
-    public Order(Builder builder) {
-        this.customerName = builder.customerName;
-        this.items = builder.items;
+    @Builder
+    private Order(String customerName, List<OrderItem> items) {
+        if (customerName == null || customerName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Customer name cannot be empty");
+        }
+        this.customerName = customerName;
+        this.items = items != null ? items : new ArrayList<>();
         this.status = OrderStatus.NEW;
     }
 
     public void addItem(OrderItem item){
-        // TODO: prevent adding items if order is already paid
+        if (isPaid()) {
+            throw new IllegalStateException("Cannot add items to a paid order");
+        }
         items.add(item);
     }
 
     public double calculateTotal(){
-        // TODO: calculate total from all order items (including discounts)
-        return 0;
+        double subtotal = 0;
+        for (OrderItem item : items) {
+            subtotal += item.getPrice() * item.getQuantity();
+        }
+        double discountedSubtotal = discount.apply(subtotal);
+        double tax = discountedSubtotal * org.example.config.AppConfig.getInstance().getTaxRate();
+        return discountedSubtotal + tax;
     }
 
     public void markAsPaid(){
-        // TODO: validate order is not empty
+        if (items.isEmpty()) {
+            throw new IllegalStateException("Cannot mark an empty order as paid");
+        }
         this.status = OrderStatus.PAID;
     }
 
@@ -36,34 +53,5 @@ public class Order {
 
     public boolean isPaid(){
         return this.status == OrderStatus.PAID;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-    public String getCustomerName() {
-        return customerName;
-    }
-    public OrderStatus getStatus() {
-        return status;
-    }
-    public static Builder builder(){
-        return new Builder();
-    }
-    public static class Builder{
-        private String customerName;
-        private List<OrderItem> items = new ArrayList<>();
-        public Builder customerName(String customerName){
-            this.customerName = customerName;
-            return this;
-        }
-        public Builder addItem(OrderItem item){
-            this.items.add(item);
-            return this;
-        }
-        public Order build(){
-            // TODO: validate customerName
-            return new Order(this);
-        }
     }
 }

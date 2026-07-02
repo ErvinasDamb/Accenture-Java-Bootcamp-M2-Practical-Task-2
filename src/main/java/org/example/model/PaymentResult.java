@@ -1,5 +1,8 @@
 package org.example.model;
 
+import lombok.Getter;
+
+@Getter
 public class PaymentResult {
     private final boolean successful;
     private final String message;
@@ -7,12 +10,5 @@ public class PaymentResult {
     public PaymentResult(boolean successful, String message){
         this.successful = successful;
         this.message = message;
-    }
-
-    public boolean isSuccessful() {
-        return successful;
-    }
-    public String getMessage() {
-        return message;
     }
 }
