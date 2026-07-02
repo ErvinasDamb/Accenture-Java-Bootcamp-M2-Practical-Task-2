@@ -1,27 +1,24 @@
-# Practical Task: Payment Processing Console App
+# M2 Practical Task: Payment Processing Implementation Summary
 
-Starter project for M3B practical task: Create a simple Java console application that simulates payment processing for an online shop.
+This implementation completes the Payment Processing Console App with the following features:
 
-## Task
-The application should support the following payment methods:
-1. Credit Card
-2. PayPal
-3. Gift Card
+## Core Requirements (Completed)
+- **Payment Methods:** Fully implemented `CreditCardPayment`, `PaypalPayment`, and `GiftCardPayment`.
+    - **Credit Card:** Validates card number length and holder name.
+    - **PayPal:** Integrated with email-based payment flow.
+    - **Gift Card:** Implemented balance tracking and sufficiency checks.
+- **Console Menu:** A fully functional interactive menu for creating orders, adding items, viewing summaries, and processing payments.
+- **Factory Pattern:** Used `PaymentMethodFactory` to encapsulate the creation of different payment strategies.
 
-Each payment method should behave differently:
-1. Credit card payment requires a card number and card holder name
-2. PayPal payment should require an email address
-3. Gift card payment should require a gift card code and available balance
+## Technical Enhancements
+- **Lombok Integration:** Applied `@Getter`, `@Builder`, `@AllArgsConstructor`, and `@ToString` across model classes (`Order`, `OrderItem`, `AppConfig`, `PaymentResult`) to eliminate boilerplate code.
+- **Design Patterns:** 
+    - **Singleton:** Implemented for `AppConfig` to manage global settings like tax rates.
+    - **Template Method:** Used in the abstract `PaymentMethod` class to standardize the payment process.
+- **Defensive Programming:** Added state validations in `Order` (e.g., preventing modifications to paid orders) and robust error handling in `PaymentProcessor`.
 
-## Behavioural Requirements
-User should be able to:
-- Create an order
-- Add items to the order
-- View the order summary
-- Choose a payment method
-- Pay for the order
-
-## Stretch goals
-- Add a new payment method, for example crypto payment or bank transfer
-- Add tax calculation using AppConfig
-- Save completed orders in memory
+## Stretch Goals Added
+- **New Payment Method:** Added `CryptoPayment` support.
+- **Tax Calculation:** Integrated automatic 21% tax calculation via `AppConfig`.
+- **Order History:** Implemented in-memory storage to track and view all completed orders.
+- **Input Validation:** Enhanced `ConsoleMenu` with safe input reading (`readDouble`, `readInt`) to handle invalid formats and non-negative constraints.
